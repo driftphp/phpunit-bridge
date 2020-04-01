@@ -9,16 +9,21 @@ jobs:
       - checkout
 
       - run:
+          name: Install PHP dependencies
+          command: |
+            sudo docker-php-ext-install pcntl
+
+      - run:
           name: Run tests / Symfony 4^3
           command: |
             composer update -n --prefer-dist --prefer-lowest --no-suggest
-            php vendor/bin/phpunit --testsuite=base
+            php vendor/bin/phpunit
 
       - run:
           name: Run tests / Symfony 5^0
           command: |
             composer update -n --prefer-dist --no-suggest
-            php vendor/bin/phpunit --testsuite=base
+            php vendor/bin/phpunit
 
   test-php74:
     docker:
@@ -29,10 +34,15 @@ jobs:
       - checkout
 
       - run:
+          name: Install PHP dependencies
+          command: |
+            sudo docker-php-ext-install pcntl
+
+      - run:
           name: Run tests / Symfony 5^0
           command: |
             composer update -n --prefer-dist --no-suggest
-            php vendor/bin/phpunit --testsuite=base
+            php vendor/bin/phpunit
 
 workflows:
   version: 2
