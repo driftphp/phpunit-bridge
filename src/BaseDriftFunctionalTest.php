@@ -45,9 +45,9 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
      *
      * @return LoopInterface
      */
-    protected function getLoop(): LoopInterface
+    protected static function getLoop(): LoopInterface
     {
-        return $this->get('reactphp.event_loop');
+        return self::$container->get('reactphp.event_loop');
     }
 
     /**
@@ -60,11 +60,13 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
      *
      * @throws Exception
      */
-    protected function await($promise)
-    {
+    protected static function await(
+        $promise,
+        LoopInterface $loop = null
+    ) {
         return await(
             $promise,
-            $loop ?? $this->getLoop()
+            $loop ?? static::getLoop()
         );
     }
 
@@ -78,11 +80,13 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
      *
      * @throws Exception
      */
-    protected function awaitAll(array $promises)
-    {
+    protected static function awaitAll(
+        array $promises,
+        LoopInterface $loop = null
+    ) {
         return awaitAll(
             $promises,
-            $loop ?? $this->getLoop()
+            $loop ?? static::getLoop()
         );
     }
 
@@ -95,7 +99,7 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
      *
      * @return Process
      */
-    protected function runServer(
+    protected static function runServer(
         string $serverPath,
         string $port,
         array $arguments = []
@@ -112,7 +116,6 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
         $jsonSerializedKernel = json_encode($kernel->toArray());
         $jsonSerializedKernelHash = '/kernel'.rand(1, 99999999999999).'.kernel.json';
         $jsonSerializedKernelPath = $kernel->getProjectDir().$jsonSerializedKernelHash;
-        //$jsonSerializedKernelPath = realpath($jsonSerializedKernelPath);
 
         file_put_contents(
             $jsonSerializedKernelPath,

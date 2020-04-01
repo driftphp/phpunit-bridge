@@ -18,7 +18,9 @@ namespace Drift\PHPUnit\Tests;
 use Drift\PHPUnit\BaseDriftFunctionalTest;
 use Drift\PHPUnit\Tests\Service\Controller;
 use Drift\PHPUnit\Tests\Service\Service;
+use function React\Promise\resolve;
 use Mmoreram\BaseBundle\Kernel\DriftBaseKernel;
+use React\EventLoop\Factory;
 use React\EventLoop\LoopInterface;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -71,18 +73,47 @@ class ServerTestTraitTest extends BaseDriftFunctionalTest
      */
     public function testKernelCreated()
     {
-        $this->assertInstanceof(LoopInterface::class, $this->getLoop());
+        $this->assertInstanceof(LoopInterface::class, static::getLoop());
         $aService = self::get(Service::class);
         $aValuePromise = $aService->getAValue();
-        $this->assertEquals('a value', $this->await($aValuePromise));
+        $this->assertEquals('a value', static::await($aValuePromise));
 
         $this->assertEquals([
             'a value',
             'a value',
-        ], $this->awaitAll([
+        ], static::awaitAll([
             $aService->getAValue(),
             $aService->getAValue(),
         ]));
+    }
+
+    /**
+     * test custom loop.
+     */
+    public function testCustomLoopAwait()
+    {
+        $loop = Factory::create();
+        $promise = resolve()->then(function () { return '1'; });
+
+        $this->assertEquals('1', static::await($promise, $loop));
+    }
+
+    /**
+     * test custom loop.
+     */
+    public function testCustomLoopAwaitAll()
+    {
+        $loop = Factory::create();
+        $promise1 = resolve()->then(function () { return '1'; });
+        $promise2 = resolve()->then(function () { return '2'; });
+
+        $this->assertEquals([
+            '1',
+            '2',
+        ], static::awaitAll([
+            $promise1,
+            $promise2,
+        ], $loop));
     }
 
     /**
@@ -90,7 +121,7 @@ class ServerTestTraitTest extends BaseDriftFunctionalTest
      */
     public function testServerCreation()
     {
-        $process = $this->runServer(
+        $process = static::runServer(
             __DIR__.'/../vendor/bin',
             '8532'
         );
@@ -108,7 +139,7 @@ class ServerTestTraitTest extends BaseDriftFunctionalTest
      */
     public function testSilentServerCreation()
     {
-        $process = $this->runServer(
+        $process = static::runServer(
             __DIR__.'/../vendor/bin',
             '8532',
             [
@@ -130,7 +161,7 @@ class ServerTestTraitTest extends BaseDriftFunctionalTest
     public function testWrongServerPath()
     {
         $this->expectException(\Exception::class);
-        $this->runServer(
+        static::runServer(
             __DIR__.'/../vendor/non-existing-bin',
             '8532'
         );
