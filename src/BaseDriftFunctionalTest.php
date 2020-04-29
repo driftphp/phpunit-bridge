@@ -129,9 +129,11 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
         ];
         $command += $arguments;
 
-        $process = new Process($command, null, [
-            'KERNEL_SERIALIZED_PATH' => $jsonSerializedKernelPath,
-        ]);
+        $environmentVars = $_ENV;
+        $environmentVars['KERNEL_SERIALIZED_PATH'] = $jsonSerializedKernelPath;
+        $environmentVars['APP_DEBUG'] = '0';
+
+        $process = new Process($command, null, $environmentVars);
         $process->start();
 
         return $process;
