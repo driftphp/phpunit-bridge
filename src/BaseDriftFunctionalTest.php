@@ -127,7 +127,7 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
             'run', "0.0.0.0:$port",
             '--adapter='.TestAdapter::class,
         ];
-        $command += $arguments;
+        $command = array_values(array_merge($command, $arguments));
 
         $environmentVars = $_ENV;
         $environmentVars['KERNEL_SERIALIZED_PATH'] = $jsonSerializedKernelPath;

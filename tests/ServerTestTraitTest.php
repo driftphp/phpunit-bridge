@@ -132,6 +132,7 @@ class ServerTestTraitTest extends BaseDriftFunctionalTest
         $this->assertContains('8532', $process->getOutput());
         $this->assertContains('/a/route', $process->getOutput());
         $this->assertEmpty($process->getErrorOutput());
+        $process->stop();
     }
 
     /**
@@ -143,16 +144,23 @@ class ServerTestTraitTest extends BaseDriftFunctionalTest
             __DIR__.'/../vendor/bin',
             '8532',
             [
-                '--silent',
+                '--quiet',
             ]
         );
 
         usleep(500000);
         $aResult = file_get_contents('http://127.0.0.1:8532/a/route');
         $this->assertEquals('A great response!', $aResult);
-        $this->assertContains('8532', $process->getOutput());
+        $this->assertNotContains('8532', $process->getOutput());
         $this->assertNotContains('/a/route', $process->getOutput());
         $this->assertEmpty($process->getErrorOutput());
+
+        /**
+         * Testing that the server is not down.
+         */
+        $anotherResult = file_get_contents('http://127.0.0.1:8532/a/route');
+        $this->assertEquals('A great response!', $anotherResult);
+        $process->stop();
     }
 
     /**
