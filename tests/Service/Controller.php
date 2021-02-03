@@ -15,8 +15,8 @@ declare(strict_types=1);
 
 namespace Drift\PHPUnit\Tests\Service;
 
-use function React\Promise\resolve;
 use React\Promise\PromiseInterface;
+use function React\Promise\resolve;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

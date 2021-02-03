@@ -18,10 +18,10 @@ namespace Drift\PHPUnit\Tests;
 use Drift\PHPUnit\BaseDriftFunctionalTest;
 use Drift\PHPUnit\Tests\Service\Controller;
 use Drift\PHPUnit\Tests\Service\Service;
-use function React\Promise\resolve;
 use Mmoreram\BaseBundle\Kernel\DriftBaseKernel;
 use React\EventLoop\Factory;
 use React\EventLoop\LoopInterface;
+use function React\Promise\resolve;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -127,10 +127,12 @@ class ServerTestTraitTest extends BaseDriftFunctionalTest
         );
 
         usleep(500000);
+        var_dump($process->getErrorOutput());
+        var_dump($process->getOutput());
         $aResult = file_get_contents('http://127.0.0.1:8532/a/route');
         $this->assertEquals('A great response!', $aResult);
-        $this->assertContains('8532', $process->getOutput());
-        $this->assertContains('/a/route', $process->getOutput());
+        $this->assertStringContainsString('8532', $process->getOutput());
+        $this->assertStringContainsString('/a/route', $process->getOutput());
         $this->assertEmpty($process->getErrorOutput());
         $process->stop();
     }
@@ -151,8 +153,8 @@ class ServerTestTraitTest extends BaseDriftFunctionalTest
         usleep(500000);
         $aResult = file_get_contents('http://127.0.0.1:8532/a/route');
         $this->assertEquals('A great response!', $aResult);
-        $this->assertNotContains('8532', $process->getOutput());
-        $this->assertNotContains('/a/route', $process->getOutput());
+        $this->assertStringNotContainsString('8532', $process->getOutput());
+        $this->assertStringNotContainsString('/a/route', $process->getOutput());
         $this->assertEmpty($process->getErrorOutput());
 
         /**

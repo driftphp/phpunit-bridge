@@ -13,15 +13,13 @@
     ],
 
     "require": {
-        "php": "^7.3",
+        "php": "^7.4 || ^8",
         "symfony/process": "^5.0",
-        "drift/http-kernel": "0.1.*, >=0.1.9",
-        "mmoreram/base-bundle": "^2.2",
+        "drift/http-kernel": "^0.1.15",
+        "mmoreram/base-bundle": "^2.3",
         "clue/block-react": "^1.3",
-        "phpunit/phpunit": "7.5.17"
-    },
-    "require-dev": {
-        "drift/server": "0.1.*, >=0.1.7"
+        "drift/server": "^0.1.21",
+        "phpunit/phpunit": "^9"
     },
     "autoload": {
         "psr-4": {

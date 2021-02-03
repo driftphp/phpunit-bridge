@@ -15,9 +15,9 @@ declare(strict_types=1);
 
 namespace Drift\PHPUnit;
 
-use Exception;
 use function Clue\React\Block\await;
 use function Clue\React\Block\awaitAll;
+use Exception;
 use Mmoreram\BaseBundle\Tests\BaseFunctionalTest;
 use React\EventLoop\Factory;
 use React\EventLoop\LoopInterface;
@@ -33,7 +33,7 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         parent::setUpBeforeClass();
 
@@ -41,8 +41,6 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
     }
 
     /**
-     * Return loop.
-     *
      * @return LoopInterface
      */
     protected static function getLoop(): LoopInterface
@@ -51,8 +49,6 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
     }
 
     /**
-     * Await.
-     *
      * @param PromiseInterface|mixed $promise
      * @param LoopInterface          $loop
      *
@@ -71,10 +67,8 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
     }
 
     /**
-     * Await all.
-     *
-     * @param array         $promise
-     * @param LoopInterface $loop
+     * @param array         $promises
+     * @param LoopInterface|null $loop
      *
      * @return array
      *
@@ -91,13 +85,13 @@ abstract class BaseDriftFunctionalTest extends BaseFunctionalTest
     }
 
     /**
-     * Run server.
-     *
      * @param string $serverPath
      * @param string $port
      * @param array  $arguments
      *
      * @return Process
+     *
+     * @throws Exception
      */
     protected static function runServer(
         string $serverPath,
